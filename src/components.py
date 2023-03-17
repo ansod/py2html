@@ -51,6 +51,8 @@ class Hstack(Layout):
                 style += f'padding:{val};'
             elif key == 'rounded':
                 style += f'border-radius:{val}'
+            elif key == 'shadow':
+                style += f'box-shadow:{val};'
         
         style += '"'
         return style
@@ -79,7 +81,9 @@ class Vstack(Layout):
             elif key == 'padding':
                 style += f'padding:{val};'
             elif key == 'rounded':
-                style += f'border-radius:{val}'
+                style += f'border-radius:{val};'
+            elif key == 'shadow':
+                style += f'box-shadow:{val};'
         
         style += '"'
         return style
@@ -156,7 +160,26 @@ class Button(Interaction):
         super().__init__(*args, **kwargs)
 
     def __repr__(self) -> str:
-        raise NotImplementedError('Not implemented yet.')
+        return f'<div{self.get_style()}>{super().__repr__()}</div>'
+
+    def get_style(self) -> str:
+        style = ' style="display:flex;align-items:center;justify-content:center;'
+        for key, val in self.attrs.items():
+            if key == 'bg':
+                style += f'background-color:{val};'
+            elif key == 'width':
+                style += f'width:{val};'
+            elif key == 'height':
+                style += f'height:{val};'
+            elif key == 'padding':
+                style += f'padding:{val};'
+            elif key == 'rounded':
+                style += f'border-radius:{val};'
+            elif key == 'shadow':
+                style += f'box-shadow:{val};'
+        
+        style += '"'
+        return style
 
 
 class Input(Interaction):

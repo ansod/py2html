@@ -1,5 +1,5 @@
 from src.py2html import Py2html
-from src.components import Component, Hstack, Vstack, Text, Link
+from src.components import Component, Hstack, Vstack, Text, Link, Button
 
 def header() -> Component:
     return Hstack(
@@ -15,20 +15,18 @@ def header() -> Component:
                 href='https://www.youtube.com',
                 style='none'
             ),
-            padding='2em',
+            padding='3em',
         ),
-        bg='#1d3557',
         width='100%',
         height='10vh',
         hlayout='space-between',
         vlayout='center',
-        padding='0 0 0 1em'
+        padding='0 0 0 2em'
     )
 
 def footer() -> Component:
     return Vstack(
-        Text('&#128175; Made with py2html', color='#f1faee'),
-        bg='#a8dadc',
+        Text('&#128175; Made with py2html', size='1.1em', color='#f1faee'),
         width='100%',
         height='20vh',
         hlayout='center',
@@ -38,14 +36,35 @@ def footer() -> Component:
 def index() -> Component:
     return Vstack(
         header(),
-        Vstack(
+        Hstack(
             Vstack(
-                Text('My page', size='2.5em', color='#000000', padding='1em 0 0 0'),
-                bg='#ffffff',
-                width='20%',
-                height='30vh',
+                Text('My page', size='2.5em', color='#f1faee', padding='1em 0 0 0'),
+                bg='#ccdbfd',
+                width='18%',
+                height='40vh',
                 hlayout='center',
-                rounded='15px'
+                rounded='15px 0 0 15px',
+                shadow='8px 8px 15px #91a4d2'
+            ),
+            Vstack(
+                Link(
+                    Button(
+                        Text('Click here', size='18px', color='#f1faee'),
+                        bg='#ccdbfd',
+                        padding='1em',
+                        rounded='6px',
+                        shadow='5px 5px #abc4ff'
+                    ),
+                    href='https://www.github.com/ansod/py2html',
+                    style='none'
+                ),
+                bg='#f1faee',
+                width='35%',
+                height='40vh',
+                hlayout='center',
+                vlayout='center',
+                rounded='0 15px 15px 0',
+                shadow='20px 8px 15px #91a4d2'
             ),
             width='100%',
             height='70vh',
@@ -53,7 +72,7 @@ def index() -> Component:
             vlayout='center'
         ),
         footer(),
-        bg='#f1faee',
+        bg='#abc4ff',
         width='100%',
         height='100vh'
     )
