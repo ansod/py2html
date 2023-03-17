@@ -31,22 +31,22 @@ class Hstack(Layout):
     
     def get_style(self) -> str:
         style = ' style="display: flex;'
-        for key, val in self.attrs.items():
-            if key == 'bg':
+        for attr, val in self.attrs.items():
+            if attr == 'bg':
                 style += f'background-color:{val};'
-            elif key == 'width':
+            elif attr == 'width':
                 style += f'width:{val};'
-            elif key == 'height':
+            elif attr == 'height':
                 style += f'height:{val};'
-            elif key == 'hlayout':
+            elif attr == 'hlayout':
                 style += f'justify-content:{val};'
-            elif key == 'vlayout':
+            elif attr == 'vlayout':
                 style += f'align-items:{val};'
-            elif key == 'padding':
+            elif attr == 'padding':
                 style += f'padding:{val};'
-            elif key == 'rounded':
+            elif attr == 'rounded':
                 style += f'border-radius:{val}'
-            elif key == 'shadow':
+            elif attr == 'shadow':
                 style += f'box-shadow:{val};'
         
         style += '"'
@@ -62,22 +62,22 @@ class Vstack(Layout):
     
     def get_style(self) -> str:
         style = ' style="display:flex; flex-direction:column;'
-        for key, val in self.attrs.items():
-            if key == 'bg':
+        for attr, val in self.attrs.items():
+            if attr == 'bg':
                 style += f'background-color:{val};'
-            elif key == 'width':
+            elif attr == 'width':
                 style += f'width:{val};'
-            elif key == 'height':
+            elif attr == 'height':
                 style += f'height:{val};'
-            elif key == 'hlayout':
+            elif attr == 'hlayout':
                 style += f'align-items:{val};'
-            elif key == 'vlayout':
+            elif attr == 'vlayout':
                 style += f'justify-content:{val};'
-            elif key == 'padding':
+            elif attr == 'padding':
                 style += f'padding:{val};'
-            elif key == 'rounded':
+            elif attr == 'rounded':
                 style += f'border-radius:{val};'
-            elif key == 'shadow':
+            elif attr == 'shadow':
                 style += f'box-shadow:{val};'
         
         style += '"'
@@ -105,13 +105,17 @@ class Text(Component):
 
     def get_style(self) -> str:
         style = ' style="'
-        for key, val in self.attrs.items():
-            if key == 'size':
+        for attr, val in self.attrs.items():
+            if attr == 'size':
                 style += f'font-size:{val};'
-            elif key == 'color':
+            elif attr == 'color':
                 style += f'color:{val};'
-            elif key == 'padding':
+            elif attr == 'padding':
                 style += f'padding:{val};'
+            elif attr == 'weight':
+                style += f'font-weight:{val}'
+            elif attr == 'font':
+                style += f'font-family:{val}'
         
         style += '"'
         return style
@@ -131,20 +135,32 @@ class Link(Interaction):
     def __init__(self, link: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.link = link
+        self.text = self.attrs.get('text')
 
     def __repr__(self) -> str:
         href = ' href="' + self.link + '"'
+        if self.text:
+            return f'<a{href}{self.get_style()}>{self.text}</a>' 
         return f'<a{href}{self.get_style()}>{super().__repr__()}</a>'
     
     def get_style(self) -> str:
         style = ' style="'
-        for key, val in self.attrs.items():
-            if key == 'style':
+        for attr, val in self.attrs.items():
+            if attr == 'style':
                 style += f'text-decoration:{val};'
-            elif key == 'color':
+            elif attr == 'color':
                 style += f'color:{val};'
-            elif key == 'padding':
+            elif attr == 'padding':
                 style += f'padding:{val};'
+            elif self.text:
+                if attr == 'size':
+                    style += f'font-size:{val};'
+                elif attr == 'color':
+                    style += f'color:{val};'
+                elif attr == 'weight':
+                    style += f'font-weight:{val}'
+                elif attr == 'font':
+                    style += f'font-family:{val}'
         
         style += '"'
         return style
@@ -159,18 +175,18 @@ class Button(Interaction):
 
     def get_style(self) -> str:
         style = ' style="display:flex;align-items:center;justify-content:center;'
-        for key, val in self.attrs.items():
-            if key == 'bg':
+        for attr, val in self.attrs.items():
+            if attr == 'bg':
                 style += f'background-color:{val};'
-            elif key == 'width':
+            elif attr == 'width':
                 style += f'width:{val};'
-            elif key == 'height':
+            elif attr == 'height':
                 style += f'height:{val};'
-            elif key == 'padding':
+            elif attr == 'padding':
                 style += f'padding:{val};'
-            elif key == 'rounded':
+            elif attr == 'rounded':
                 style += f'border-radius:{val};'
-            elif key == 'shadow':
+            elif attr == 'shadow':
                 style += f'box-shadow:{val};'
         
         style += '"'
@@ -211,14 +227,14 @@ class Image(Media):
     
     def get_style(self) -> str:
         style = ' style="display:flex;align-items:center;justify-content:center;'
-        for key, val in self.attrs.items():
-            if key == 'width':
+        for attr, val in self.attrs.items():
+            if attr == 'width':
                 style += f'width:{val};'
-            elif key == 'height':
+            elif attr == 'height':
                 style += f'height:{val};'
-            elif key == 'rounded':
+            elif attr == 'rounded':
                 style += f'border-radius:{val};'
-            elif key == 'shadow':
+            elif attr == 'shadow':
                 style += f'box-shadow:{val};'
         
         style += '"'
