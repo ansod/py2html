@@ -1,18 +1,18 @@
 from src.py2html import Py2html
-from src.components import Component, Hstack, Vstack, Text, Link, Button
+from src.components import Component, Hstack, Vstack, Text, Link, Button, Image
 
 def header() -> Component:
     return Hstack(
         Text('Name', size='1.5em', color='#f1faee'),
         Hstack(
             Link(
+                'https://www.google.com',
                 Text('Home', size='1.5em', color='#f1faee', padding='0 1em 0 0'),
-                href='https://www.google.com',
                 style='none'
             ),
             Link(
+                'https://www.youtube.com',
                 Text('About', size='1.5em', color='#f1faee', padding='0 0 0 1em'),
-                href='https://www.youtube.com',
                 style='none'
             ),
             padding='3em',
@@ -48,14 +48,20 @@ def index() -> Component:
             ),
             Vstack(
                 Link(
+                    'https://www.github.com/ansod/py2html',
                     Button(
-                        Text('Click here', size='18px', color='#f1faee'),
+                        Hstack(
+                            Image('./github-mark-white.png', width='25px', height='25px'),
+                            Text('Click here', size='20px', color='#f1faee'),
+                            hlayout='space-around',
+                            vlayout='center',
+                            width='130px'
+                        ),
                         bg='#ccdbfd',
                         padding='1em',
                         rounded='6px',
                         shadow='5px 5px #abc4ff'
                     ),
-                    href='https://www.github.com/ansod/py2html',
                     style='none'
                 ),
                 bg='#f1faee',

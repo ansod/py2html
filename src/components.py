@@ -1,4 +1,6 @@
 from abc import ABC, abstractclassmethod
+from PIL import Image as Im
+import PIL
 
 class Component(ABC):
 
@@ -6,13 +8,6 @@ class Component(ABC):
         self.components = args
         self.attrs = kwargs
 
-    @abstractclassmethod
-    def __repr__(self) -> str:
-        pass
-
-    @abstractclassmethod
-    def get_style(self) -> str:
-        pass
 
 ''' Layout components '''
 class Layout(Component):
@@ -127,18 +122,18 @@ class Interaction(Component):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-
     def __repr__(self) -> str:
         return f'{"".join([repr(comp) for comp in self.components])}'
 
 
 class Link(Interaction):
     
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, link: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.link = link
 
     def __repr__(self) -> str:
-        href = ' href="' + self.attrs.get('href') + '" ' if self.attrs.get('href') else ''
+        href = ' href="' + self.link + '"'
         return f'<a{href}{self.get_style()}>{super().__repr__()}</a>'
     
     def get_style(self) -> str:
@@ -184,7 +179,7 @@ class Button(Interaction):
 
 class Input(Interaction):
     
-    def __init__(self, type, placeholder='Input', **kwargs) -> None:
+    def __init__(self, type: str, placeholder='Input', **kwargs) -> None:
         super().__init__(**kwargs)
         self.type = type
         self.placeholder = placeholder
@@ -205,8 +200,32 @@ class Media(Component):
 
 class Image(Media):
     
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, path: str, alt='Image', *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.path = path
+        self.alt = alt
 
     def __repr__(self) -> str:
-        raise NotImplementedError('Not implemented yet.')
+        self.save_asset()
+        return f'<img src="{self.path}" alt="{self.alt}"{self.get_style()}>'
+    
+    def get_style(self) -> str:
+        style = ' style="display:flex;align-items:center;justify-content:center;'
+        for key, val in self.attrs.items():
+            if key == 'width':
+                style += f'width:{val};'
+            elif key == 'height':
+                style += f'height:{val};'
+            elif key == 'rounded':
+                style += f'border-radius:{val};'
+            elif key == 'shadow':
+                style += f'box-shadow:{val};'
+        
+        style += '"'
+        return style
+    
+    def save_asset(self) -> None:
+        img = Im.open(self.path)
+        name = self.path.split('/')[-1]
+        self.path = f'assets/{name}'
+        img.save(f'./build/{self.path}')

@@ -19,7 +19,10 @@ class Py2html():
     def compile(self) -> None:
         if not os.path.exists('./build/'):
             os.makedirs('./build/')
-            
+        
+        if not os.path.exists('./build/assets/'):
+            os.makedirs('./build/assets/')
+
         for path, view in self.views.items():
             view.compile(path)
 
