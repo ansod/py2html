@@ -47,6 +47,10 @@ class Hstack(Layout):
                 style += f'justify-content:{val};'
             elif key == 'vlayout':
                 style += f'align-items:{val};'
+            elif key == 'padding':
+                style += f'padding:{val};'
+            elif key == 'rounded':
+                style += f'border-radius:{val}'
         
         style += '"'
         return style
@@ -72,6 +76,10 @@ class Vstack(Layout):
                 style += f'align-items:{val};'
             elif key == 'vlayout':
                 style += f'justify-content:{val};'
+            elif key == 'padding':
+                style += f'padding:{val};'
+            elif key == 'rounded':
+                style += f'border-radius:{val}'
         
         style += '"'
         return style
@@ -103,6 +111,8 @@ class Text(Component):
                 style += f'font-size:{val};'
             elif key == 'color':
                 style += f'color:{val};'
+            elif key == 'padding':
+                style += f'padding:{val};'
         
         style += '"'
         return style
@@ -134,8 +144,11 @@ class Link(Interaction):
                 style += f'text-decoration:{val};'
             elif key == 'color':
                 style += f'color:{val};'
+            elif key == 'padding':
+                style += f'padding:{val};'
         
         style += '"'
+        return style
 
 class Button(Interaction):
     

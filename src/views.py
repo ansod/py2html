@@ -8,5 +8,5 @@ class View:
 
     def compile(self, path: str):
         with open(f'./build/{path}.html', 'w+') as f:
-            f.write('<style> * { margin:0; padding:0; } </style>')
+            f.write('<style> * { margin:0; padding:0; box-sizing: border-box;} </style>')
             f.write(repr(self.builder_func(*self.buider_args)))
