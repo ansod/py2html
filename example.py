@@ -1,6 +1,7 @@
 from src.py2html import Py2html
 from src.components import Component, Hstack, Vstack, Text, Link, Button, Image
 from src.actions import Hover
+from src.rules import Rule
 
 def header() -> Component:
     return Hstack(
@@ -29,8 +30,8 @@ def header() -> Component:
 def footer() -> Component:
     return Hstack(
         Hstack(
-            Text('&#128175; Made with', size='1.1em', color='#f1faee', font='Verdana'),
-            Link('https://www.github.com/ansod/py2html', text='py2html', size='1.1em', color='#f1faee', font='Verdana'),
+            Text('&#128175; Made with', size='1.1em', color='#f1faee'),
+            Link('https://www.github.com/ansod/py2html', text='py2html', size='1.1em', color='#f1faee'),
             width='195px',
             hlayout='space-between'
         ),
@@ -45,7 +46,11 @@ def index() -> Component:
         header(),
         Hstack(
             Vstack(
-                Text('My page', size='2.5em', color='#f1faee', padding='1em 0 0 0', font='Verdana'),
+                Text('My page', size='2.5em', color='#f1faee', padding='1em 0 0 0'),
+                Vstack(
+                    Text('This is some text that describes something about this website. Here is some more text.', color='#f1faee', align='center'),
+                    padding='2em 1em 0 1em'
+                ),
                 bg='#ccdbfd',
                 width='18%',
                 height='40vh',
@@ -59,7 +64,7 @@ def index() -> Component:
                     Button(
                         Hstack(
                             Image('./github-mark-white.png', width='25px', height='25px'),
-                            Text('Click here', size='18px', color='#f1faee', font='Verdana'),
+                            Text('Click here', size='18px', color='#f1faee'),
                             hlayout='space-around',
                             vlayout='center',
                             width='140px'
@@ -97,4 +102,6 @@ site = Py2html('Test site')
 index_view = site.add_view('index', index)
 index_view.add_action(Hover(shadow='3px 3px #abc4ff', transform='translate(2px,2px)'), 'cool_button')
 index_view.add_action(Hover(color='#5d76b3'), 'nav')
+index_view.add_rule(Rule(font='Verdana'), component=Text)
+index_view.add_rule(Rule(font='Verdana'), component=Link)
 site.compile()

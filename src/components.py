@@ -1,7 +1,6 @@
-from abc import ABC
 from PIL import Image as Im
 
-class Component(ABC):
+class Component:
 
     def __init__(self, *args, **kwargs) -> None:
         self.components = args
@@ -14,7 +13,15 @@ class Component(ABC):
         if not self.classname:
             return ''
         
-        return f' class="{self.classname}"'
+        return self.classname
+    
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlComponent'
+
+    @staticmethod
+    def base_type() -> str:
+        return 'Component'
 
 
 ''' Layout components '''
@@ -29,6 +36,10 @@ class Layout(Component):
     def get_classname(self) -> str:
         return super().get_classname()
     
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlLayout'
+    
 
 
 class Hstack(Layout):
@@ -37,7 +48,7 @@ class Hstack(Layout):
         super().__init__(*args, **kwargs)
 
     def __repr__(self) -> str:   
-        return f'<div{super().get_classname()}{self.get_style()}>{super().__repr__()}</div>'
+        return f'<div class="py2htmlHstack {super().get_classname()}"{self.get_style()}>{super().__repr__()}</div>'
     
     def get_style(self) -> str:
         style = ' style="display: flex;'
@@ -61,6 +72,11 @@ class Hstack(Layout):
         
         style += '"'
         return style
+    
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlHstack'
+
 
 class Vstack(Layout):
     
@@ -68,7 +84,7 @@ class Vstack(Layout):
         super().__init__(*args, **kwargs)
 
     def __repr__(self) -> str: 
-        return f'<div{super().get_classname()}{self.get_style()}>{super().__repr__()}</div>'
+        return f'<div class="py2htmlVstack {super().get_classname()}"{self.get_style()}>{super().__repr__()}</div>'
     
     def get_style(self) -> str:
         style = ' style="display:flex; flex-direction:column;'
@@ -93,14 +109,10 @@ class Vstack(Layout):
         style += '"'
         return style
     
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlVstack'
 
-class Spacing(Layout):
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
-    def __repr__(self) -> str:
-        raise NotImplementedError('Not implemented yet.')
 
 
 ''' Text components '''
@@ -111,7 +123,7 @@ class Text(Component):
         self.text = text
 
     def __repr__(self) -> str:
-        return f'<p{super().get_classname()}{self.get_style()}>{self.text}</p>'
+        return f'<p class="py2htmlText {super().get_classname()}"{self.get_style()}>{self.text}</p>'
 
     def get_style(self) -> str:
         style = ' style="'
@@ -126,12 +138,19 @@ class Text(Component):
                 style += f'font-weight:{val};'
             elif attr == 'font':
                 style += f'font-family:{val};'
+            elif attr == 'align':
+                style += f'text-align:{val};'
         
         style += '"'
         return style
+    
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlText'
 
-''' Interaction components '''
-class Interaction(Component):
+
+''' Interactive components '''
+class Interactive(Component):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -141,9 +160,13 @@ class Interaction(Component):
     
     def get_classname(self) -> str:
         return super().get_classname()
+    
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlInteractive'
 
 
-class Link(Interaction):
+class Link(Interactive):
     
     def __init__(self, link: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -152,9 +175,7 @@ class Link(Interaction):
 
     def __repr__(self) -> str:
         href = ' href="' + self.link + '"'
-        if self.text:
-            return f'<a{super().get_classname()}{href}{self.get_style()}>{self.text}</a>' 
-        return f'<a{super().get_classname()}{href}{self.get_style()}>{super().__repr__()}</a>'
+        return f'<a class="py2htmlLink {super().get_classname()}"{href}{self.get_style()}>{self.text if self.text else super().__repr__()}</a>'
     
     def get_style(self) -> str:
         style = ' style="'
@@ -174,17 +195,24 @@ class Link(Interaction):
                     style += f'font-weight:{val};'
                 elif attr == 'font':
                     style += f'font-family:{val};'
+                elif attr == 'align':
+                    style += f'text-align:{val};'
         
         style += '"'
         return style
+    
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlLink'
+    
 
-class Button(Interaction):
+class Button(Interactive):
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
     def __repr__(self) -> str:
-        return f'<div{super().get_classname()}{self.get_style()}>{super().__repr__()}</div>'
+        return f'<div class="py2htmlButton {super().get_classname()}"{self.get_style()}>{super().__repr__()}</div>'
 
     def get_style(self) -> str:
         style = ' style="display:flex;align-items:center;justify-content:center;'
@@ -204,9 +232,13 @@ class Button(Interaction):
         
         style += '"'
         return style
+    
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlButton'
 
 
-class Input(Interaction):
+class Input(Interactive):
     
     def __init__(self, type: str, placeholder='Input', **kwargs) -> None:
         super().__init__(**kwargs)
@@ -215,6 +247,10 @@ class Input(Interaction):
 
     def __repr__(self) -> str:
         raise NotImplementedError('Not implemented yet.')
+    
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlInput'
 
 
 ''' Media components '''
@@ -228,6 +264,11 @@ class Media(Component):
 
     def get_classname(self) -> str:
         return super().get_classname()
+    
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlMedia'
+
 
 class Image(Media):
     
@@ -238,7 +279,7 @@ class Image(Media):
 
     def __repr__(self) -> str:
         self.save_asset()
-        return f'<img{super().get_classname()} src="{self.path}" alt="{self.alt}"{self.get_style()}>'
+        return f'<img class="py2htmlImage {super().get_classname()}" src="{self.path}" alt="{self.alt}"{self.get_style()}>'
     
     def get_style(self) -> str:
         style = ' style="display:flex;align-items:center;justify-content:center;'
@@ -260,3 +301,7 @@ class Image(Media):
         name = self.path.split('/')[-1]
         self.path = f'assets/{name}'
         img.save(f'./build/{self.path}')
+
+    @staticmethod
+    def name() -> str:
+        return 'py2htmlImage'
