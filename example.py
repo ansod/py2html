@@ -1,5 +1,6 @@
 from src.py2html import Py2html
 from src.components import Component, Hstack, Vstack, Text, Link, Button, Image
+from src.actions import Hover
 
 def header() -> Component:
     return Hstack(
@@ -7,16 +8,17 @@ def header() -> Component:
         Hstack(
             Link(
                 'https://www.google.com',
-                Text('Home', size='1.5em', color='#f1faee', padding='0 1em 0 0', font='Verdana'),
+                Text('Home', size='1.5em', color='#f1faee', padding='0 1em 0 0', font='Verdana', classname='nav'),
                 style='none'
             ),
             Link(
                 'https://www.youtube.com',
-                Text('About', size='1.5em', color='#f1faee', padding='0 0 0 1em', font='Verdana'),
+                Text('About', size='1.5em', color='#f1faee', padding='0 0 0 1em', font='Verdana', classname='nav'),
                 style='none'
             ),
             padding='3em',
         ),
+        classname='header',
         width='100%',
         height='10vh',
         hlayout='space-between',
@@ -62,6 +64,7 @@ def index() -> Component:
                             vlayout='center',
                             width='140px'
                         ),
+                        classname='cool_button',
                         bg='#ccdbfd',
                         padding='1em',
                         rounded='6px',
@@ -91,5 +94,7 @@ def index() -> Component:
 
 
 site = Py2html('Test site')
-site.add_view('index', index)
+index_view = site.add_view('index', index)
+index_view.add_action(Hover(shadow='3px 3px #abc4ff', transform='translate(2px,2px)'), 'cool_button')
+index_view.add_action(Hover(color='#5d76b3'), 'nav')
 site.compile()

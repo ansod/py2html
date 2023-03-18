@@ -1,12 +1,20 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC
 from PIL import Image as Im
-import PIL
 
 class Component(ABC):
 
     def __init__(self, *args, **kwargs) -> None:
         self.components = args
         self.attrs = kwargs
+        self.classname = kwargs.get('classname')
+        if self.classname:
+            kwargs.pop('classname')
+
+    def get_classname(self) -> str:
+        if not self.classname:
+            return ''
+        
+        return f' class="{self.classname}"'
 
 
 ''' Layout components '''
@@ -17,7 +25,10 @@ class Layout(Component):
 
     def __repr__(self) -> str:
         return f'{"".join([repr(comp) for comp in self.components])}'
-        #return f'<div{style}>{"".join([repr(comp) for comp in self.components])}</div>'
+    
+    def get_classname(self) -> str:
+        return super().get_classname()
+    
 
 
 class Hstack(Layout):
@@ -25,9 +36,8 @@ class Hstack(Layout):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-    def __repr__(self) -> str:
-        return f'<div{self.get_style()}>{super().__repr__()}</div>'
-        #return super().__repr__(self.get_style())
+    def __repr__(self) -> str:   
+        return f'<div{super().get_classname()}{self.get_style()}>{super().__repr__()}</div>'
     
     def get_style(self) -> str:
         style = ' style="display: flex;'
@@ -57,8 +67,8 @@ class Vstack(Layout):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-    def __repr__(self) -> str:
-        return f'<div{self.get_style()}>{super().__repr__()}</div>'
+    def __repr__(self) -> str: 
+        return f'<div{super().get_classname()}{self.get_style()}>{super().__repr__()}</div>'
     
     def get_style(self) -> str:
         style = ' style="display:flex; flex-direction:column;'
@@ -101,7 +111,7 @@ class Text(Component):
         self.text = text
 
     def __repr__(self) -> str:
-        return f'<p{self.get_style()}>{self.text}</p>'
+        return f'<p{super().get_classname()}{self.get_style()}>{self.text}</p>'
 
     def get_style(self) -> str:
         style = ' style="'
@@ -113,9 +123,9 @@ class Text(Component):
             elif attr == 'padding':
                 style += f'padding:{val};'
             elif attr == 'weight':
-                style += f'font-weight:{val}'
+                style += f'font-weight:{val};'
             elif attr == 'font':
-                style += f'font-family:{val}'
+                style += f'font-family:{val};'
         
         style += '"'
         return style
@@ -128,6 +138,9 @@ class Interaction(Component):
 
     def __repr__(self) -> str:
         return f'{"".join([repr(comp) for comp in self.components])}'
+    
+    def get_classname(self) -> str:
+        return super().get_classname()
 
 
 class Link(Interaction):
@@ -140,8 +153,8 @@ class Link(Interaction):
     def __repr__(self) -> str:
         href = ' href="' + self.link + '"'
         if self.text:
-            return f'<a{href}{self.get_style()}>{self.text}</a>' 
-        return f'<a{href}{self.get_style()}>{super().__repr__()}</a>'
+            return f'<a{super().get_classname()}{href}{self.get_style()}>{self.text}</a>' 
+        return f'<a{super().get_classname()}{href}{self.get_style()}>{super().__repr__()}</a>'
     
     def get_style(self) -> str:
         style = ' style="'
@@ -158,9 +171,9 @@ class Link(Interaction):
                 elif attr == 'color':
                     style += f'color:{val};'
                 elif attr == 'weight':
-                    style += f'font-weight:{val}'
+                    style += f'font-weight:{val};'
                 elif attr == 'font':
-                    style += f'font-family:{val}'
+                    style += f'font-family:{val};'
         
         style += '"'
         return style
@@ -171,7 +184,7 @@ class Button(Interaction):
         super().__init__(*args, **kwargs)
 
     def __repr__(self) -> str:
-        return f'<div{self.get_style()}>{super().__repr__()}</div>'
+        return f'<div{super().get_classname()}{self.get_style()}>{super().__repr__()}</div>'
 
     def get_style(self) -> str:
         style = ' style="display:flex;align-items:center;justify-content:center;'
@@ -213,6 +226,8 @@ class Media(Component):
     def __repr__(self) -> str:
         raise NotImplementedError('Not implemented yet.')
 
+    def get_classname(self) -> str:
+        return super().get_classname()
 
 class Image(Media):
     
@@ -223,7 +238,7 @@ class Image(Media):
 
     def __repr__(self) -> str:
         self.save_asset()
-        return f'<img src="{self.path}" alt="{self.alt}"{self.get_style()}>'
+        return f'<img{super().get_classname()} src="{self.path}" alt="{self.alt}"{self.get_style()}>'
     
     def get_style(self) -> str:
         style = ' style="display:flex;align-items:center;justify-content:center;'

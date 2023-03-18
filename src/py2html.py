@@ -10,11 +10,12 @@ class Py2html():
         self.name = name
         self.views: dict[View] = dict()
 
-    def add_view(self, path: str, func: Callable, *args) -> None:
+    def add_view(self, path: str, func: Callable, *args) -> View:
         if not callable(func):
             raise Exception("view function passed not callable")
          
         self.views[path] = View(func, *args)
+        return self.views[path]
     
     def compile(self) -> None:
         if not os.path.exists('./build/'):
